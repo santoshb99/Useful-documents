@@ -66,8 +66,9 @@ Activate the virtual environment
 source venv/bin/activate
 ```
 
-Let's now install Flask and Gunicorn using pip
+Let's now install Flask, MySQL driver and Gunicorn using pip
 ```bash
+pip install mysql-connector-python
 pip install flask gunicorn
 ```
 
@@ -173,17 +174,13 @@ FlaskAppProject
   |____ app.sock
 ```
 
-Check if the app is running with
-```bash
-curl localhost:8000
-```
 
 ## Step 5 - Configuring Nginx
 Run Nginx Webserver to accept and route request to Gunicorn Finally, we set up Nginx as a reverse-proxy to accept the requests from the user and route it to gunicorn.
 
 Install Nginx
 ```bash
-sudo apt-get nginx
+sudo apt-get install nginx
 ```
 
 Start the Nginx service and go to the Public IP address of your EC2 on the browser to see the default nginx landing page
@@ -192,9 +189,15 @@ sudo systemctl start nginx
 sudo systemctl enable nginx
 ```
 
-Edit the default file in the sites-available folder.
+#### To create a new configuration file:
+You can copy the default configuration and modify it as needed:
 ```bash
-sudo nano /etc/nginx/sites-available/default
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/app
+```
+
+Edit the app file to suit your requirements:
+```bash
+sudo nano /etc/nginx/sites-available/app
 ```
 
 Edit few of the things in this file 
@@ -226,10 +229,28 @@ server {
 ```
 The location /static part of this file takes care of serving the static files through nginx.
 
-If you are created a different file other than default in nginx/sites-available/ directory then you have to activate it.
-Activate this configuration by executing this: (eg. app)
+
+After making the necessary changes, create a symbolic link again:
 ```bash
-sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled/
+```
+
+#### Test Nginx Configuration
+Always test your Nginx configuration after making changes:
+```bash
+sudo nginx -t
+```
+
+#### Restart Nginx
+If the configuration test was successful, restart Nginx to apply changes:
+```bash
+sudo systemctl restart nginx
+```
+
+#### Verify the Status of Nginx
+Check if Nginx is now running without issues:
+```bash
+sudo systemctl status nginx
 ```
 
 ## Step 6 - Providing necessary Permissions
