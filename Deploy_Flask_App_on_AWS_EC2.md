@@ -72,9 +72,9 @@ pip install mysql-connector-python
 pip install flask gunicorn
 ```
 
-Or if you have requirement.txt file what a specific versions of packages that can be installed also,
+OR if you have requirement.txt file what a specific versions of packages that can be installed also,
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 
@@ -230,7 +230,10 @@ server {
 The location /static part of this file takes care of serving the static files through nginx.
 
 
-After making the necessary changes, create a symbolic link again:
+After making the necessary changes, remove the default file at /etc/nginx/sites-enabled/ and create a symbolic link again:
+```bash
+sudo rm default
+```
 ```bash
 sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled/
 ```
@@ -266,9 +269,9 @@ sudo systemctl restart app
 sudo systemctl restart nginx
 ```
 
-On every changes in your project file, you have to restart your nginx to see the changes.
+On every changes in your project file, you have to reload/restart your nginx to see the changes.
 ```bash
-sudo systemctl restart nginx
+sudo systemctl reload nginx
 ```
 
 Tada! Our application is up!
